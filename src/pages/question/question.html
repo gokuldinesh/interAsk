@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title lang="en">Query</ion-title>
+  </ion-navbar>
+</ion-header>
+  
+<ion-content padding *ngIf="question">
+  
+  <ion-card>
+
+    <ion-card-header class="question">
+      {{question.question}}
+    </ion-card-header>
+
+    <ion-card-content>
+      {{question.explanation}}
+    </ion-card-content>
+
+    <ion-row class="cardfooter">
+        <ion-col>
+          <p class="tags_footer">Tags: <i>{{question.tags}}</i></p>
+        </ion-col>
+      </ion-row>
+
+    <ion-row class="cardfooter">
+      <ion-col>
+        <p class="user_info_footer">{{question.asked_by.name}}&emsp;</p>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
+  
+  <div *ngIf="answers != null || answers.length > 0">
+    <ion-card *ngFor="let i of answers">
+      <ion-card-content>
+        <p>{{i.answer}}</p>
+        <p class="user_info_footer">{{i.name}}&emsp;</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <form (ngSubmit)="sendResponse(); replyForm.resetForm()" #replyForm="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-10>
+          <ion-input placeholder="Type a response" [(ngModel)]="answer.content" name="answer" clearInput required></ion-input>
+        </ion-col>
+
+        <ion-col col-2>
+          <ion-buttons end>
+            <button ion-button icon-only name="send" type="submit">
+              <ion-icon name="send"></ion-icon>
+            </button>
+          </ion-buttons>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-footer>

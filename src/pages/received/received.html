@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title lang="en">Q&A</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-list-header lang="en">Questions received</ion-list-header>
+    <ion-item *ngIf="questions == null || questions.length == 0"><p lang="en">No queries received yet.</p></ion-item>
+    <ion-item *ngFor="let i of questions" (tap)="redirect(i['id']);">
+      <h2>{{i["question"]}}</h2>
+      <p>{{i["explanation"]}}</p>
+    </ion-item>
+  </ion-list>
+
+  <ion-fab>
+    <button ion-fab bottom right edge class="fab_ask" (tap)="ask();"><ion-icon name="text"></ion-icon></button>
+  </ion-fab>
+</ion-content>

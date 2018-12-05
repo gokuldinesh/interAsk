@@ -1,0 +1,47 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title lang="en">Ask</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  
+  <form #askForm="ngForm" (ngSubmit)="postQuery(); askForm.resetForm()">
+    
+    <ion-list>
+      <ion-item>
+        <ion-label floating lang="en">Query (in one line)</ion-label>
+        <ion-input type="text" [(ngModel)]="query.question" name="question" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating lang="en">Explain your problem</ion-label>
+        <ion-textarea type="text" [(ngModel)]="query.explanation" name="explanation" required></ion-textarea>
+      </ion-item>
+      
+      <ion-list-header lang="en"><br><br>Select appropriate tags</ion-list-header>
+      
+      <ion-item>
+        <ion-label lang="en">Technology</ion-label>
+        <ion-select [(ngModel)]="techSelect" multiple="true" name="Technology">
+          <ion-option *ngFor = "let item of technology" [value]="item.id">{{item.name}}</ion-option>
+        </ion-select>
+      </ion-item>
+     
+      <ion-item>
+        <ion-label lang="en">Business</ion-label>
+        <ion-select [(ngModel)]="busiSelect" multiple="true" name="Business" required>
+          <ion-option *ngFor = "let item of business" [value]="item.id">{{item.name}}</ion-option>
+        </ion-select>
+      </ion-item>
+
+    </ion-list>
+
+    <button [disabled]="!askForm.form.valid" ion-button block round type="submit" lang="en">Post</button>
+  
+  </form>
+
+</ion-content>

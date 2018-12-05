@@ -1,0 +1,46 @@
+<ion-header>
+
+  <ion-navbar>
+    
+    <ion-title lang="en">Profile</ion-title>
+    
+    <ion-buttons end>
+      <button ion-button icon-only name="logout" (tap) = "signOut()">
+        <ion-icon name="md-log-out"></ion-icon>
+      </button>
+    </ion-buttons>
+
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  
+  <p class="title" lang="en">Hi {{userName}}</p>
+  
+  <ion-list>
+    <ion-list-header lang="en"><br><br><br>View and Edit your Tags here.</ion-list-header>
+  
+    <ion-item>
+      <ion-label lang="en">Technology</ion-label>
+      <ion-select [(ngModel)]="techSelect" multiple="true" (ionChange)="enableSave()">
+        <ion-option *ngFor = "let item of technology" [value]="item.id">{{item.name}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label lang="en">Business</ion-label>
+      <ion-select [(ngModel)]="busiSelect" multiple="true" (ionChange)="enableSave()">
+        <ion-option *ngFor = "let item of business" [value]="item.id">{{item.name}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <button ion-button block round *ngIf="flag" (click)="saveChanges()" lang="en">Save Changes</button>
+  
+  </ion-list>
+  
+  <ion-fab>
+    <button ion-fab bottom right edge class="fab_ask" (tap)="ask();"><ion-icon name="text"></ion-icon></button>
+  </ion-fab>
+
+</ion-content>
