@@ -3,6 +3,7 @@ import firebase from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { DatabaseReference } from '@angular/fire/database/interfaces';
 import { ToastController } from 'ionic-angular';
+import { constants } from '../assets/constants';
 
 @Injectable()
 @Component({
@@ -13,6 +14,7 @@ export class FirebaseService {
 
   private user: any;
   private db: DatabaseReference;
+  private userTags: any;
 
   constructor(public toastCtrl: ToastController,
               private afAuth: AngularFireAuth) {
@@ -78,51 +80,57 @@ export class FirebaseService {
 
   signOut() {
     this.afAuth.auth.signOut().then((res) => {
-      let message = 'You are signed out';
+      let message = constants.SIGNED_OUT;
       this.presentToast(message);
     });
   }
 
   async getUserTags(): Promise<void> {
-    this.db.child("users").child(this.user.uid)
+    return this.db.child("users").child(this.user.uid)
     .child("tags").once("value").then((snapshot)=>{
       return snapshot.val();
     });    
   }
 
   getTags() {
-    let tags = [ this.tech, this.lm, this.tech_disp, this.lm_disp ];
+    let tags = constants.TAGS;
     return tags;
   }
 
   async updateProfile(initialTags, finalTags) {
-    for (var i in finalTags)
-    {
-      if (initialTags == null)
-      {
-        this.db.child("tag_user").child(finalTags[i]).child(this.user.uid).set(true);
-      }
-      else if (!(initialTags.includes(finalTags[i])))
-      {
-        this.db.child("tag_user").child(finalTags[i]).child(this.user.uid).set(true);
-      }
-    }
-
-    for (var i in initialTags)
-    {
-      if (finalTags == null)
-      {
-        this.db.child("tag_user").child(initialTags[i]).child(this.user.uid).set(null);
-      }
-      else if (!(finalTags.includes(initialTags[i])))
-      {
-        this.db.child("tag_user").child(initialTags[i]).child(this.user.uid).set(null);
-      }
-    }
+    this.updateUserTags(finalTags, initialTags, "true");
+    this.updateUserTags(initialTags, finalTags, "null");
 
     this.db.child("users").child(this.user.uid).child("tags").set(finalTags);
-    let message = 'Tags updated successfully';
+    let message = constants.UPDATED_TAGS;
     this.presentToast(message);
+  }
+
+  updateUserTags(tagArray1, tagArray2, val) {
+    for (let tag1 in tagArray1) {
+      if (tagArray2 == null) {
+        this.updateUserTagsUtil(tagArray1[tag1], val);
+      }
+      else {
+        let flag = true;
+        for (let tag2 in tagArray2) {
+          if (tagArray2[tag2] == tagArray1[tag1]) {
+            flag = false;
+            break;
+          }
+        }
+        if (flag) {
+          this.updateUserTagsUtil(tagArray1[tag1], val);
+        }
+      }
+    }
+  }
+
+  updateUserTagsUtil(tag, val) {
+    if (val == "true")
+      this.db.child("tag_user").child(tag).child(this.user.uid).set(true);
+    else
+      this.db.child("tag_user").child(tag).child(this.user.uid).set(null);
   }
 
   async postQuery(timestamp, query, tags): Promise<void> {
@@ -143,7 +151,7 @@ export class FirebaseService {
       this.db.child("users").child(this.user.uid).child("asked").push(timestamp);
     }).catch( error => {
       console.log(error);
-      let message = 'Unable to post query. Check your internet connection and try again.';
+      let message = constants.POST_QUERY_ERROR;
       this.presentToast(message);
     });
 
@@ -153,23 +161,23 @@ export class FirebaseService {
   async pushQuery(timestamp, tags): Promise<void> {
     let send_to = [];
     let c = 0;
-    for (let i in tags) {
-      this.db.child("tag_user").child(tags[i]).once("value").then((snapshot)=>{
-        let temp = snapshot.val();
-        for (let j in temp) {
-          if (j != this.afAuth.auth.currentUser.uid)
-          send_to.push(j);
+    for (let tag in tags) {
+      this.db.child("tag_user").child(tags[tag]).once("value").then((snapshot)=>{
+        let userTemp = snapshot.val();
+        for (let user in userTemp) {
+          if (user != this.afAuth.auth.currentUser.uid)
+          send_to.push(user);
         }
         send_to = send_to.filter((el, i, a) => i === a.indexOf(el));
         c++;
         if (c == tags.length) {
-          for (let i in send_to) {
-            this.db.child("users").child(send_to[i]).child("received").push(timestamp);
+          for (let user in send_to) {
+            this.db.child("users").child(send_to[user]).child("received").push(timestamp);
           }
         }
       });
     }
-    let message = 'Query posted successfully';
+    let message = constants.POSTED_QUERY;
     this.presentToast(message);
   }
 
@@ -177,9 +185,9 @@ export class FirebaseService {
     let questions = [];
     return this.db.child("users").child(this.user.uid).child("asked").once("value").then((snapshot)=>{
       let asked = snapshot.val();
-      for (let i in asked)
+      for (let qid in asked)
       {
-        this.db.child("questions").child(asked[i.toString()]).once("value").then((snapshot)=>{
+        this.db.child("questions").child(asked[qid.toString()]).once("value").then((snapshot)=>{
           questions.push(snapshot.val());
         });
       }
@@ -192,9 +200,9 @@ export class FirebaseService {
     let questions = [];
     return this.db.child("users").child(this.user.uid).child("received").once("value").then((snapshot)=>{
       let received = snapshot.val();
-      for (let i in received)
+      for (let qid in received)
       {
-        this.db.child("questions").child(received[i.toString()]).once("value").then((snapshot)=>{
+        this.db.child("questions").child(received[qid.toString()]).once("value").then((snapshot)=>{
           questions.push(snapshot.val());
         });
       }
@@ -232,44 +240,5 @@ export class FirebaseService {
     });
     toast.present();
   }
-
-  tech = [
-    {id:"5", name: ".NET"},
-    {id:"6", name: "Angular"},
-    {id:"7", name: "Couchbase"},
-    {id:"8", name: "SQL Server"},
-    {id:"9", name: "Elastic Search"},
-    {id:"10", name: "Docker"},
-    {id:"11", name: "RabbitMQ"},
-  ];
-  lm = [
-    {id:"1_a", name: "Order Management"},
-    {id:"1_b", name: "Route Management"},
-    {id:"1_c", name: "Account Management"},
-    {id:"1_d", name: "Claims Management"},
-    {id:"1_e", name: "Zone Management"},
-    {id:"1_f", name: "Location Management"},
-    {id:"1_g", name: "User Management"},
-    {id:"1_h", name: "Facility Management"}    
-  ]; 
-  tech_disp = [
-    {id:"5", name: ".NET"},
-    {id:"6", name: "Angular"},
-    {id:"7", name: "Couchbase"},
-    {id:"8", name: "SQL Server"},
-    {id:"9", name: "Elastic Search"},
-    {id:"10", name: "Docker"},
-    {id:"11", name: "RabbitMQ"},
-  ];
-  lm_disp = [
-    {id:"1_a", name: "Order Management"},
-    {id:"1_b", name: "Route Management"},
-    {id:"1_c", name: "Account Management"},
-    {id:"1_d", name: "Claims Management"},
-    {id:"1_e", name: "Zone Management"},
-    {id:"1_f", name: "Location Management"},
-    {id:"1_g", name: "User Management"},
-    {id:"1_h", name: "Facility Management"}
-  ];
 
 }

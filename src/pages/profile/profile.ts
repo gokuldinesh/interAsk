@@ -15,12 +15,13 @@ export class ProfilePage {
   userName: string = "";
   technology: any = [];
   business: any = [];
-  techSelect: any = [];
+  techSelect: any = ["6"];
   busiSelect: any = [];
   techTags: any;
   busiTags: any;
   initialTags: any = [];
   finalTags: any = [];
+  isLoaded: boolean = false;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -53,6 +54,7 @@ export class ProfilePage {
 
       this.initialTags = this.firebaseService.getUserTags().then( res => {
         if(res != null) {
+          this.initialTags = res;
           this.populateTags();
         }
       });
@@ -64,11 +66,13 @@ export class ProfilePage {
   populateTags() {
     for (let i=0; i<this.initialTags.length; i++) {
       if (isNaN(this.initialTags[i])) {
-        if (this.busiTags[this.initialTags[i]] != null)
-          this.busiSelect.push(this.initialTags[i].toString());
+        if (this.busiTags[this.initialTags[i]] != null) {
+          this.busiSelect.push(this.initialTags[i]);
+        }
       } else {
-        if (this.techTags[this.initialTags[i]] != null)
-          this.techSelect.push(this.initialTags[i].toString());
+        if (this.techTags[this.initialTags[i]] != null) {
+          this.techSelect.push(this.initialTags[i]);
+        }
       }
     }
     if(this.techSelect == null)
@@ -77,6 +81,7 @@ export class ProfilePage {
       this.initialTags = this.techSelect;
     else
       this.initialTags = this.techSelect.concat(this.busiSelect);
+    this.isLoaded = true;
   }
 
   saveChanges() {

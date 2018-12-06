@@ -17,10 +17,18 @@
 
 .fab_ask {
     position: fixed;
-    bottom: 10%;
+    bottom: calc(49px + 4%);
     right: 5%; 
 }
 
 .title {
     font-size: 1.5em;
+}
+
+.loading {
+    position: fixed;
+    width: 28px;
+    height: 28px;
+    left: calc(50% - 14px);
+    top: calc(50% - 14px);
 }

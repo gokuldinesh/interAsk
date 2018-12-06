@@ -13,6 +13,7 @@ import { LoginPage } from '../login/login';
 export class ReceivedPage {
 
   questions: any = [];
+  isLoaded: boolean = false;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -27,6 +28,7 @@ export class ReceivedPage {
   }
 
   ionViewWillEnter() {
+    this.isLoaded = false;
     this.getQuestions();
   }
 
@@ -34,6 +36,7 @@ export class ReceivedPage {
     this.firebaseService.getReceivedQuestions().then(res => {
       if(res != null)
         this.questions = res;
+      this.isLoaded = true;
     });
   }
 

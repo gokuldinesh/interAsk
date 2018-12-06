@@ -35,6 +35,7 @@ export class QuestionPage {
   }
 
   getQuestion() {
+    this.answers = [];
     this.firebaseService.getQuestion(this.qid).then(res => {
       this.question = res;
       for (let i in this.question.answers) {

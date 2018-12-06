@@ -1,7 +1,5 @@
 <ion-header>
-
   <ion-navbar>
-    
     <ion-title lang="en">Profile</ion-title>
     
     <ion-buttons end>
@@ -9,24 +7,26 @@
         <ion-icon name="md-log-out"></ion-icon>
       </button>
     </ion-buttons>
-
   </ion-navbar>
-
 </ion-header>
 
 <ion-content padding>
   
   <p class="title" lang="en">Hi {{userName}}</p>
+
+  <ion-list *ngIf = "!isLoaded">
+    <ion-spinner name="crescent" class="loading"></ion-spinner>
+  </ion-list>
   
-  <ion-list>
-    <ion-list-header lang="en"><br><br><br>View and Edit your Tags here.</ion-list-header>
+  <ion-list *ngIf = "isLoaded">
+    <ion-list-header lang="en"><br><br><br>Areas of expertise:</ion-list-header>
   
     <ion-item>
       <ion-label lang="en">Technology</ion-label>
-      <ion-select [(ngModel)]="techSelect" multiple="true" (ionChange)="enableSave()">
+      <ion-select  [(ngModel)]="techSelect" multiple="true" (ionChange)="enableSave()">
         <ion-option *ngFor = "let item of technology" [value]="item.id">{{item.name}}</ion-option>
       </ion-select>
-    </ion-item>
+    </ion-item> 
 
     <ion-item>
       <ion-label lang="en">Business</ion-label>

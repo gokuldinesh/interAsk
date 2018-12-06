@@ -7,11 +7,16 @@
 <ion-content>
   <ion-list>
     <ion-list-header lang="en">Questions received</ion-list-header>
-    <ion-item *ngIf="questions == null || questions.length == 0"><p lang="en">No queries received yet.</p></ion-item>
-    <ion-item *ngFor="let i of questions" (tap)="redirect(i['id']);">
-      <h2>{{i["question"]}}</h2>
-      <p>{{i["explanation"]}}</p>
-    </ion-item>
+    <ion-list *ngIf = "!isLoaded">
+      <ion-spinner name="crescent" class="loading"></ion-spinner>
+    </ion-list>
+    <div *ngIf = "isLoaded">
+      <ion-item *ngIf="questions == null || questions.length == 0"><p lang="en">No queries posted yet.</p></ion-item>
+      <ion-item *ngFor="let question of questions" (tap)="redirect(question['id']);">
+        <h2>{{question["question"]}}</h2>
+        <p>{{question["explanation"]}}</p>
+      </ion-item>
+    </div>
   </ion-list>
 
   <ion-fab>

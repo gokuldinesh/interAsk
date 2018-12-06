@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { FirebaseService } from '../../services/firebase.service';
 import { TabsPage } from '../tabs/tabs';
+import { constants } from '../../assets/constants';
 
 @IonicPage()
 @Component({
@@ -10,16 +11,28 @@ import { TabsPage } from '../tabs/tabs';
 })
 export class LoginPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public firebaseService: FirebaseService) {}
+  constant : any;
+
+  constructor(public navCtrl: NavController, 
+              public navParams: NavParams, 
+              public loading: LoadingController,
+              public firebaseService: FirebaseService) {}
 
   signIn() {
-    this.signInWithGoogle().then(() => {
-      this.navCtrl.setRoot(TabsPage);
-    }).catch(error => {
-      console.log(error);
-      let message = 'Unable to sign in. Check your internet connection and try again.';
-      this.firebaseService.presentToast(message);
-      this.navCtrl.setRoot(LoginPage)
+    let loader = this.loading.create({
+      content: constants.SIGNING_IN
+    });
+    loader.present().then(() => {
+      this.signInWithGoogle().then(() => {
+        this.navCtrl.setRoot(TabsPage);
+        loader.dismiss();
+      }).catch(error => {
+        console.log(error);
+        let message = constants.SIGNED_IN;
+        this.firebaseService.presentToast(message);
+        this.navCtrl.setRoot(LoginPage);
+        loader.dismiss();
+      });
     });
   }
 
