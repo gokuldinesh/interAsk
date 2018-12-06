@@ -1,5 +1,7 @@
 {
   "name": "redAsk",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "ionic-angular"
 }
