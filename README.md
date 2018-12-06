@@ -15,11 +15,13 @@ Run the following commands:
   ```
   
 To serve the application
+
   On PC:
-  ```typescript
-    ionic serve
-   ```
+```typescript
+  ionic serve
+ ```
+   
   On Android:
-  ```typescript
-    ionic cordova run android
-   ```
+```typescript
+  ionic cordova run android
+ ```
