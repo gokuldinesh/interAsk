@@ -15,7 +15,7 @@ export class ProfilePage {
   userName: string = "";
   technology: any = [];
   business: any = [];
-  techSelect: any = ["6"];
+  techSelect: any = [];
   busiSelect: any = [];
   techTags: any;
   busiTags: any;
@@ -57,6 +57,7 @@ export class ProfilePage {
           this.initialTags = res;
           this.populateTags();
         }
+        this.isLoaded = true;
       });
     } catch (error) {
       console.log(error);
@@ -81,7 +82,6 @@ export class ProfilePage {
       this.initialTags = this.techSelect;
     else
       this.initialTags = this.techSelect.concat(this.busiSelect);
-    this.isLoaded = true;
   }
 
   saveChanges() {
