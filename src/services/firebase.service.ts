@@ -85,7 +85,7 @@ export class FirebaseService {
     });
   }
 
-  async getUserTags(): Promise<void> {
+  async getUserTags() {
     return this.db.child("users").child(this.user.uid)
     .child("tags").once("value").then((snapshot)=>{
       return snapshot.val();
@@ -98,10 +98,9 @@ export class FirebaseService {
   }
 
   async updateProfile(initialTags, finalTags) {
+    this.db.child("users").child(this.user.uid).child("tags").set(finalTags);
     this.updateUserTags(finalTags, initialTags, "true");
     this.updateUserTags(initialTags, finalTags, "null");
-
-    this.db.child("users").child(this.user.uid).child("tags").set(finalTags);
     let message = constants.UPDATED_TAGS;
     this.presentToast(message);
   }
@@ -129,7 +128,7 @@ export class FirebaseService {
   updateUserTagsUtil(tag, val) {
     if (val == "true")
       this.db.child("tag_user").child(tag).child(this.user.uid).set(true);
-    else
+    else if (val == "null")
       this.db.child("tag_user").child(tag).child(this.user.uid).set(null);
   }
 

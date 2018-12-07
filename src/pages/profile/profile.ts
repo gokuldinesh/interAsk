@@ -52,7 +52,7 @@ export class ProfilePage {
     try {
       this.userName = this.firebaseService.getCurrentUserName();
 
-      this.initialTags = this.firebaseService.getUserTags().then( res => {
+      this.firebaseService.getUserTags().then( res => {
         if(res != null) {
           this.initialTags = res;
           this.populateTags();
