@@ -20,7 +20,7 @@ export class MyApp {
       statusBar.overlaysWebView(true);
 
       // set status bar to white
-      statusBar.backgroundColorByHexString('#B61C28');
+      statusBar.backgroundColorByHexString('#8e161f');
       splashScreen.hide();
       this.isSignedIn();
     });
