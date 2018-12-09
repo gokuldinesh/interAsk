@@ -92,6 +92,13 @@ export class FirebaseService {
     });    
   }
 
+  async getUserInterests() {
+    return this.db.child("users").child(this.user.uid)
+    .child("interests").once("value").then((snapshot)=>{
+      return snapshot.val();
+    }); 
+  }
+
   getTags() {
     let tags = constants.TAGS;
     return tags;
@@ -102,6 +109,12 @@ export class FirebaseService {
     this.updateUserTags(finalTags, initialTags, "true");
     this.updateUserTags(initialTags, finalTags, "null");
     let message = constants.UPDATED_TAGS;
+    this.presentToast(message);
+  }
+
+  async updateInterests(finalInterests) {
+    this.db.child("users").child(this.user.uid).child("interests").set(finalInterests);
+    let message = constants.UPDATED_INTERESTS;
     this.presentToast(message);
   }
 
@@ -211,8 +224,38 @@ export class FirebaseService {
     });
   }
 
+  async getFeedQuestions() {
+    let qids = [];
+    let questions = [];
+    return this.getUserInterests().then(res => {
+      if (res != null) {
+        let interests = res;
+        let c = 0;
+        for (let tag of interests) {
+          this.db.child("tag_question").child(tag.toString()).once("value").then((snapshot)=>{
+            for (let qid in snapshot.val())
+              qids.push(snapshot.val()[qid]);
+            c++;
+          }).then(() => {
+            if (c == interests.length) {
+              qids = qids.filter((el, i, a) => i === a.indexOf(el));
+              for (let qid of qids) {
+                this.db.child("questions").child(qid).once("value").then((snapshot)=>{
+                  let query = snapshot.val();
+                  if (query.asked_by.user != this.user.uid)
+                    questions.push(query);
+                });
+              }
+            }
+          });
+        }
+      }
+    }).then(() => {
+      return questions;
+    });
+  }
+
   async getQuestion(qid) {
-    let responses = [];
     return this.db.child("questions").child(qid).once("value").then((snapshot) => {
       return snapshot.val();
     }).catch(error => {

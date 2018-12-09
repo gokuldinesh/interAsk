@@ -54,4 +54,13 @@ export class QuestionPage {
       this.answer.content = "";
     }
   }
+
+  getDateTime(timestamp) {
+    let monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    let year = timestamp.substring(0,4);
+    let month = monthNames[parseInt(timestamp.substring(4,6))-1];
+    let day = timestamp.substring(6,8);
+    let date = month +' '+ day +', '+ year;
+    return date;
+  }
 }

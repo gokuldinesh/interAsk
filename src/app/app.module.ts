@@ -16,6 +16,7 @@ import { ReceivedPage } from '../pages/received/received';
 import { AskPage } from '../pages/ask/ask';
 import { LoginPage } from '../pages/login/login';
 import { QuestionPage } from '../pages/question/question';
+import { FeedPage } from '../pages/feed/feed';
 import { FirebaseService } from '../services/firebase.service';
 import { config } from '../config';
 
@@ -29,6 +30,7 @@ import { config } from '../config';
     AskPage,
     LoginPage,
     QuestionPage,
+    FeedPage,
     FirebaseService
   ],
   imports: [
@@ -47,7 +49,8 @@ import { config } from '../config';
     ReceivedPage,
     AskPage,
     LoginPage,
-    QuestionPage
+    QuestionPage,
+    FeedPage
   ],
   providers: [
     StatusBar,
