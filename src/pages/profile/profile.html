@@ -19,24 +19,43 @@
   </ion-list>
   
   <ion-list *ngIf = "isLoaded">
-    <ion-list-header lang="en"><br><br><br>Areas of expertise:</ion-list-header>
+    <ion-list-header lang="en"><br><br>Areas of expertise:</ion-list-header>
   
     <ion-item>
       <ion-label lang="en">Technology</ion-label>
-      <ion-select  [(ngModel)]="techSelect" multiple="true" (ionChange)="enableSave()">
+      <ion-select  [(ngModel)]="techSelect" multiple="true" (ionChange)="enableSave('expertise')">
         <ion-option *ngFor = "let item of technology" [value]="item.id">{{item.name}}</ion-option>
       </ion-select>
     </ion-item> 
 
     <ion-item>
       <ion-label lang="en">Business</ion-label>
-      <ion-select [(ngModel)]="busiSelect" multiple="true" (ionChange)="enableSave()">
+      <ion-select [(ngModel)]="busiSelect" multiple="true" (ionChange)="enableSave('expertise')">
         <ion-option *ngFor = "let item of business" [value]="item.id">{{item.name}}</ion-option>
       </ion-select>
     </ion-item>
 
-    <button ion-button block round *ngIf="flag" (click)="saveChanges()" lang="en">Save Changes</button>
+    <button ion-button block round *ngIf="flagExpertise" (click)="saveChanges('expertise')" lang="en">Save Changes</button>
+  </ion-list>
+
+  <ion-list *ngIf = "isLoaded">
+    <ion-list-header lang="en"><br><br>Areas of interest:</ion-list-header>
   
+    <ion-item>
+      <ion-label lang="en">Technology</ion-label>
+      <ion-select  [(ngModel)]="techInterestSelect" multiple="true" (ionChange)="enableSave('interests')">
+        <ion-option *ngFor = "let item of technology" [value]="item.id">{{item.name}}</ion-option>
+      </ion-select>
+    </ion-item> 
+
+    <ion-item>
+      <ion-label lang="en">Business</ion-label>
+      <ion-select [(ngModel)]="busiInterestSelect" multiple="true" (ionChange)="enableSave('interests')">
+        <ion-option *ngFor = "let item of business" [value]="item.id">{{item.name}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <button ion-button block round *ngIf="flagInterests" (click)="saveChanges('interests')" lang="en">Save Changes</button>
   </ion-list>
   
   <ion-fab>

@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title lang="en">Feed</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <p class="title" lang="en">Hi {{userName}}</p>
+  <ion-list>
+    <ion-list *ngIf = "!isLoaded">
+      <ion-spinner name="crescent" class="loading"></ion-spinner>
+    </ion-list>
+    <div *ngIf = "isLoaded">
+      <ion-list-header *ngIf="questions != null && questions.length > 0" lang="en">Feed is populated based on your interest(s).</ion-list-header>
+      <ion-item *ngIf="interests == null || interests.length == 0">
+        <p lang="en">Please add your interests in profile to view feed.<br><br></p>
+        <button ion-button block round clear (click)="goToProfile()" lang="en">Update profile</button>
+      </ion-item>
+      <ion-item *ngIf="(interests != null && interests.length > 0) && (questions == null || questions.length == 0)"><p lang="en">No queries found in your areas of interest.</p></ion-item>
+      <ion-card *ngFor="let question of questions" (tap)="redirect(question['id']);">
+        <ion-card-header class="question">
+          {{question["question"]}}
+        </ion-card-header>
+        <ion-card-content>
+          {{question["explanation"]}}
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ion-list>
+
+  <ion-fab>
+    <button ion-fab bottom right edge class="fab_ask" (tap)="ask();"><ion-icon name="text"></ion-icon></button>
+  </ion-fab>
+  
+</ion-content>
