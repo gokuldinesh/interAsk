@@ -157,10 +157,11 @@ export class FirebaseService {
     this.pushQuery(timestamp, tags);
   }
 
-  async pushQuery(timestamp, tags): Promise<void> {
+  async pushQuery(qid, tags): Promise<void> {
     let send_to = [];
     let c = 0;
     for (let tag in tags) {
+      this.db.child("tag_question").child(tags[tag]).push(qid);
       this.db.child("tag_user").child(tags[tag]).once("value").then((snapshot)=>{
         let userTemp = snapshot.val();
         for (let user in userTemp) {
@@ -171,7 +172,7 @@ export class FirebaseService {
         c++;
         if (c == tags.length) {
           for (let user in send_to) {
-            this.db.child("users").child(send_to[user]).child("received").push(timestamp);
+            this.db.child("users").child(send_to[user]).child("received").push(qid);
           }
         }
       });
