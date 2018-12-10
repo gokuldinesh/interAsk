@@ -27,7 +27,7 @@
     
         <ion-row class="cardfooter">
           <ion-col>
-            <p class="user_info_footer">{{question.asked_by.name}}&emsp;{{getDateTime(question.asked_by.timestamp)}}</p>
+            <p class="user_info_footer">{{question.asked_by.name}}&emsp;</p>
           </ion-col>
         </ion-row>
   
@@ -37,7 +37,7 @@
         <ion-card *ngFor="let i of answers">
           <ion-card-content>
             <p>{{i.answer}}</p>
-            <p class="user_info_footer">{{i.name}}&emsp;{{getDateTime(i.timestamp)}}</p>
+            <p class="user_info_footer">{{i.name}}&emsp;</p>
           </ion-card-content>
         </ion-card>
       </div>

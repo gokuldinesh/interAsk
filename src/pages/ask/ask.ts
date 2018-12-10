@@ -55,7 +55,6 @@ export class AskPage {
     timestamp = timestamp.replace(/[^0-9]/g, "");
     this.firebaseService.postQuery(timestamp, this.query, tags);
     this.navCtrl.setRoot(TabsPage);
-    this.app.getRootNav().setRoot(TabsPage);
   }
   
 }

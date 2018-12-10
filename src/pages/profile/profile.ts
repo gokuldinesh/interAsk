@@ -11,21 +11,16 @@ import { LoginPage } from '../login/login';
 })
 export class ProfilePage {
 
-  flagExpertise: boolean = false;
-  flagInterests : boolean = false;
+  flag: boolean = false;
   userName: string = "";
   technology: any = [];
   business: any = [];
   techSelect: any = [];
   busiSelect: any = [];
-  techInterestSelect: any = [];
-  busiInterestSelect: any = [];
   techTags: any;
   busiTags: any;
   initialTags: any = [];
   finalTags: any = [];
-  initialInterests: any = [];
-  finalInterests: any = [];
   isLoaded: boolean = false;
 
   constructor(public navCtrl: NavController, 
@@ -60,79 +55,45 @@ export class ProfilePage {
       this.firebaseService.getUserTags().then( res => {
         if(res != null) {
           this.initialTags = res;
-          this.populateTags('expertise', this.initialTags);
+          this.populateTags();
         }
-        this.firebaseService.getUserInterests().then( resp => {
-          if (resp != null) {
-            this.initialInterests = resp;
-            this.populateTags('interests', this.initialInterests);
-          }
-          this.isLoaded = true;
-        });
+        this.isLoaded = true;
       });
     } catch (error) {
       console.log(error);
     }
   }
 
-  populateTags(type, initial) {
-    let tech = [];
-    let busi = [];
-    for (let i=0; i<initial.length; i++) {
-      if (isNaN(initial[i])) {
-        if (this.busiTags[initial[i]] != null) {
-          busi.push(initial[i]);
+  populateTags() {
+    for (let i=0; i<this.initialTags.length; i++) {
+      if (isNaN(this.initialTags[i])) {
+        if (this.busiTags[this.initialTags[i]] != null) {
+          this.busiSelect.push(this.initialTags[i]);
         }
       } else {
-        if (this.techTags[initial[i]] != null) {
-          tech.push(initial[i]);
+        if (this.techTags[this.initialTags[i]] != null) {
+          this.techSelect.push(this.initialTags[i]);
         }
       }
     }
-    if(tech == null)
-      initial = busi;
-    else if(busi == null)
-      initial = tech;
+    if(this.techSelect == null)
+      this.initialTags = this.busiSelect;
+    else if(this.busiSelect == null)
+      this.initialTags = this.techSelect;
     else
-      initial = tech.concat(busi);
-
-    if (type == 'expertise') {
-      this.techSelect = tech;
-      this.busiSelect = busi;
-      this.initialTags = initial;
-    }
-    else if (type == 'interests') {
-      this.techInterestSelect = tech;
-      this.busiInterestSelect = busi;
-      this.initialInterests = initial;
-    }
+      this.initialTags = this.techSelect.concat(this.busiSelect);
   }
 
-  saveChanges(type) {
-    if (type == 'expertise') {
-      this.finalTags = this.getFinalTags(this.techSelect, this.busiSelect);
-      this.firebaseService.updateProfile(this.initialTags, this.finalTags);
-      this.flagExpertise = false;
-      this.initialTags = this.finalTags;
-    } 
-    else if (type == 'interests') {
-      this.finalInterests = this.getFinalTags(this.techInterestSelect, this.busiInterestSelect);
-      this.firebaseService.updateInterests(this.finalInterests);
-      this.flagInterests = false;
-      this.initialInterests = this.finalInterests;
-    }
-
-  }
-
-  getFinalTags(tech, busi) {
-    let final = [];
-    if(tech == null)
-      final = busi;
-    else if(busi == null)
-      final = tech;
+  saveChanges() {
+    if(this.techSelect == null)
+      this.finalTags = this.busiSelect;
+    else if(this.busiSelect == null)
+      this.finalTags = this.techSelect;
     else
-      final = tech.concat(busi);
-    return final;
+      this.finalTags = this.techSelect.concat(this.busiSelect);
+    this.firebaseService.updateProfile(this.initialTags, this.finalTags);
+    this.flag = false;
+    this.initialTags = this.finalTags;
   }
 
   signOut() {
@@ -141,11 +102,8 @@ export class ProfilePage {
     this.app.getRootNav().setRoot(LoginPage);
   }
 
-  enableSave(type) {
-    if (type == 'expertise')
-      this.flagExpertise=true;
-    else if (type == 'interests')
-      this.flagInterests = true;
+  enableSave() {
+    this.flag=true;
   }
 
   ask() {

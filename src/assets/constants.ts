@@ -3,7 +3,6 @@ export const constants = {
     "SIGNED_IN": "Unable to sign in. Check your internet connection and try again.",
     "SIGNED_OUT": "You are signed out",
     "UPDATED_TAGS": "Tags updated successfully",
-    "UPDATED_INTERESTS": "Interests updated successfully",
     "POST_QUERY_ERROR": "Unable to post query. Check your internet connection and try again.",
     "POSTED_QUERY": "Query posted successfully",
     "TAGS": [
