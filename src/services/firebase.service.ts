@@ -1,9 +1,11 @@
 import { Injectable, Component } from '@angular/core';
 import firebase from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { GooglePlus } from '@ionic-native/google-plus';
 import { DatabaseReference } from '@angular/fire/database/interfaces';
 import { ToastController } from 'ionic-angular';
 import { constants } from '../assets/constants';
+
 
 @Injectable()
 @Component({
@@ -17,7 +19,8 @@ export class FirebaseService {
   private userTags: any;
 
   constructor(public toastCtrl: ToastController,
-              private afAuth: AngularFireAuth) {
+              private afAuth: AngularFireAuth,
+              private gplus: GooglePlus) {
     this.db = firebase.database().ref();
   }
 
@@ -48,11 +51,25 @@ export class FirebaseService {
         this.saveAuth(res);
       });
     else {
-      return this.afAuth.auth.signInWithRedirect(provider).then(() => {
-        return firebase.auth().getRedirectResult().then( res => {
-          this.saveAuth(res);
-        });
+      const gplusUser = await this.gplus.login({
+        'webClientId': '1006688015933-p15jnt771v83e9uhjol40ldv7vseojd8.apps.googleusercontent.com',
+        'offline': true,
+        'scopes': 'profile email'
       });
+
+      return await this.afAuth.auth.signInAndRetrieveDataWithCredential(
+        firebase.auth.GoogleAuthProvider.credential(gplusUser.idToken)
+        ).then((result)=> {
+          console.log(result);
+          this.saveAuth(result);
+        }).catch(error => {
+          console.log("error",error);
+        });
+      // return this.afAuth.auth.signInWithRedirect(provider).then(() => {
+      //   return firebase.auth().getRedirectResult().then( res => {
+      //     this.saveAuth(res);
+      //   });
+      // });
     }
   }
 

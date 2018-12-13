@@ -6,6 +6,7 @@ import { MyApp } from './app.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule, AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import {GooglePlus} from '@ionic-native/google-plus';
 
 import { TabsPage } from '../pages/tabs/tabs';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -57,7 +58,8 @@ import { config } from '../config';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FirebaseService,
-    AngularFireDatabase
+    AngularFireDatabase,
+    GooglePlus
   ]
 })
 export class AppModule {}

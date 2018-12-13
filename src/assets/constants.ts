@@ -1,6 +1,6 @@
 export const constants = {
     "SIGNING_IN": "Signing in...",
-    "SIGNED_IN": "Unable to sign in. Check your internet connection and try again.",
+    "SIGN_IN_ERROR": "Unable to sign in. Check your internet connection and try again.",
     "SIGNED_OUT": "You are signed out",
     "UPDATED_TAGS": "Tags updated successfully",
     "UPDATED_INTERESTS": "Interests updated successfully",

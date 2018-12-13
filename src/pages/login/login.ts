@@ -28,7 +28,7 @@ export class LoginPage {
         loader.dismiss();
       }).catch(error => {
         console.log(error);
-        let message = constants.SIGNED_IN;
+        let message = constants.SIGN_IN_ERROR;
         this.firebaseService.presentToast(message);
         this.navCtrl.setRoot(LoginPage);
         loader.dismiss();
